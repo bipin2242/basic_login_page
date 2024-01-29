@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Login Page</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f2f2f2;
+      }
+
+      h2 {
+        text-align: center;
+        color: #333;
+      }
+
+      form {
+        max-width: 300px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      label {
+        display: block;
+        margin-bottom: 10px;
+        color: #333;
+      }
+
+      input[type="text"],
+      input[type="password"] {
+        width: 93%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+
+      input[type="submit"] {
+        width: 100%;
+        padding: 10px;
+        background-color: #4caf50;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      input[type="submit"]:hover {
+        background-color: #45a049;
+      }
+
+      input[type="submit"]:disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
+      }
+
+      .countrysel{
+        width: 100%;
+        padding: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Login</h2>
+    <form onsubmit="event.preventDefault(); validateForm();">
+      <!-- This line of code will prevent the form from submitting automatically -->
+      <label for="username">Username:</label>
+      <input
+        type="text"
+        id="username"
+        name="username"
+        autocomplete="username"
+      /><br /><br />
+      <label for="password">Password:</label>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        onkeyup="checkPasswordStrength()"
+      /><br /><br />
+      <!-- This line of code will call the checkPasswordStrength() function every time a key is pressed -->
+      <div id="password-strength"></div>
+      <br />
+      <!-- This line of code will display the password strength information -->
+      <input type="submit" id="btn-submit" value="Login" />
+      <!-- This line of code will disable the submit button by default -->
+      <div class="countrysel">
+        <label for="countrySelect">Select a Country:</label>
+        <select id="countrySelect" onchange="countrySelected()">
+          <option value="usa">United States</option>
+          <option value="nepal">Nepal</option>
+          <option value="china">China</option>
+        </select>
+        <br /><br />
+        <label for="citySelect">Select a City:</label>
+        <select id="citySelect"></select>
+      </div>
+    </form>
+    <script>
+      /*
+       * This function will validate the username and password entered by the user
+       */
+      function validateForm() {
+        var username = document.getElementById("username").value;
+        // console.log(username);
+        var password = document.getElementById("password").value;
+
+        if (username === "admin" && password === "password") {
+          alert("Login successful!");
+          event.target.submit(); // This line of code will manually submit the form which we had prevented earlier
+        } else {
+          alert("Invalid username or password. Please try again.");
+        }
+      }
+
+      /**
+       * This function will check the password strength.
+       *
+       * The strength of the password is measured as per the following criteria:
+       * - lowercase characters
+       * - uppercase characters
+       * - numbers
+       * - special characters
+       * - length is greater than or equal to 6
+       *
+       * The password strength will be displayed as per the following criteria:
+       * - Weak: 0-2 criteria met
+       * - Medium: 3 criteria met
+       * - Strong: 4-5 criteria met
+       */
+      function checkPasswordStrength() {
+        var password = document.getElementById("password").value;
+        var passwordStrength = document.getElementById("password-strength");
+        let i = 0;
+
+        if (password.match(/[a-z]+/)) {
+          // This line of code will check if the password contains lowercase characters
+          i++;
+        }
+        if (password.match(/[A-Z]+/)) {
+          // This line of code will check if the password contains uppercase characters
+          i++;
+        }
+        if (password.match(/[0-9]+/)) {
+          // This line of code will check if the password contains numbers
+          i++;
+        }
+        if (password.match(/[!@#$%^&*]+/)) {
+          // This line of code will check if the password contains special characters
+          i++;
+        }
+        if (password.length >= 6) {
+          // This line of code will check if the password length is greater than or equal to 6
+          i++;
+        } else {
+          // This line of code will disable the submit button until the password length is greater than or equal to 6
+          document.getElementById("btn-submit").disabled = true;
+        }
+
+        console.log(i);
+
+        // if(i <= 2) {
+        //     passwordStrength.innerHTML = "Weak";
+        //     passwordStrength.style.color = "red";
+        // } else if(i <= 3) {
+        //     passwordStrength.innerHTML = "Medium";
+        //     passwordStrength.style.color = "orange";
+        //     document.getElementById("btn-submit").disabled = false;
+        // } else {
+        //     passwordStrength.innerHTML = "Strong";
+        //     passwordStrength.style.color = "green";
+        //     document.getElementById("btn-submit").disabled = false;
+        // }
+
+        // if(password.length == 0) {
+        //     passwordStrength.innerHTML = "";
+        //     document.getElementById("btn-submit").disabled = true;
+        // }
+      }
+
+      function countrySelected() {
+        var selectElement = document.getElementById("countrySelect");
+        var citySelectElement = document.getElementById("citySelect");
+        var selectedCountry = selectElement.value;
+
+        // Clear existing options in the citySelect element
+        citySelectElement.innerHTML = "";
+
+        // Add cities based on the selected country
+        switch (selectedCountry) {
+          case "usa":
+            addOption(citySelectElement, "new-york", "New York");
+            addOption(citySelectElement, "los-angeles", "Los Angeles");
+            addOption(citySelectElement, "chicago", "Chicago");
+            break;
+          case "nepal":
+            addOption(citySelectElement, "kathmandu", "Kathmandu");
+            addOption(citySelectElement, "pokhara", "Pokhara");
+            addOption(citySelectElement, "illam", "Illam");
+            break;
+          case "china":
+            addOption(citySelectElement, "beijin", "Beijin");
+
+            break;
+          // Add cases for more countries as needed
+          default:
+            // Default case, no cities added
+            break;
+        }
+      }
+
+      function addOption(selectElement, value, text) {
+        var option = document.createElement("option");
+        option.value = value;
+        option.text = text;
+        selectElement.add(option);
+      }
+    </script>
+  </body>
+</html>
